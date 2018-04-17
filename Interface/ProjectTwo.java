@@ -9,14 +9,14 @@ package Interface;
  *
  * @author manfr
  */
-public class ProyectoDos {
+public class ProjectTwo {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        VentanaPrimera vp = new VentanaPrimera();
+        FirstWindows vp = new FirstWindows();
         vp.setVisible(true);
         vp.setLocationRelativeTo(null);
     }

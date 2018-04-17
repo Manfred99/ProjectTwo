@@ -12,12 +12,15 @@ import javax.swing.JFileChooser;
  *
  * @author manfr
  */
-public class VentanaPrimera extends javax.swing.JFrame {
+public class FirstWindows extends javax.swing.JFrame {
 
     /**
      * Creates new form VentanaPrimera
      */
-    public VentanaPrimera() {
+    
+    public static String path;
+    
+    public FirstWindows() {
         initComponents();
     }
 
@@ -33,6 +36,7 @@ public class VentanaPrimera extends javax.swing.JFrame {
         lbl_InfoPath = new javax.swing.JLabel();
         txt_ShowPath = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        btn_go = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,6 +53,13 @@ public class VentanaPrimera extends javax.swing.JFrame {
             }
         });
 
+        btn_go.setText("Go");
+        btn_go.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_goActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -62,6 +73,10 @@ public class VentanaPrimera extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_ShowPath, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(133, 133, 133)
+                .addComponent(btn_go)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -72,19 +87,33 @@ public class VentanaPrimera extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_InfoPath, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_ShowPath, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addGap(95, 95, 95)
+                .addComponent(btn_go)
+                .addContainerGap(106, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public String getPath(){
+        return path;
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         JFileChooser chooseFile  = new JFileChooser();
         chooseFile.showOpenDialog(null);
         File file = chooseFile.getSelectedFile();
         txt_ShowPath.setText(String.valueOf(file));
+        path=txt_ShowPath.getText();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btn_goActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_goActionPerformed
+        // TODO add your handling code here:
+        MakingMosaic mosaic = new MakingMosaic();
+        mosaic.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_goActionPerformed
 
     /**
      * @param args the command line arguments
@@ -103,25 +132,27 @@ public class VentanaPrimera extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrimera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FirstWindows.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrimera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FirstWindows.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrimera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FirstWindows.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrimera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FirstWindows.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VentanaPrimera().setVisible(true);
+                new FirstWindows().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_go;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel lbl_InfoPath;
     private javax.swing.JTextField txt_ShowPath;
