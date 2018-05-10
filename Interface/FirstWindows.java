@@ -66,6 +66,7 @@ public class FirstWindows extends javax.swing.JFrame{
     private Label lbl_imageS = new Label();
     private Graphics g2;
     private String nombre2="";
+    private BufferedImage imageToCatch;
     public FirstWindows() {
         initComponents();
         
@@ -310,6 +311,7 @@ public class FirstWindows extends javax.swing.JFrame{
             g.drawImage(im, 720, 100, null);
             bufferedImage = ImageIO.read(new FileInputStream(absolutePath));
             imageToSave=ImageIO.read(new FileInputStream(absolutePath));
+            imageToCatch=ImageIO.read(new FileInputStream(absolutePath));
             graphic(d1NewImage,pixels);
             this.cb_stratWith.setEnabled(true);
             this.lbl_EnterPathAdver.setVisible(true);
@@ -546,7 +548,7 @@ public class FirstWindows extends javax.swing.JFrame{
             graphic(d1,pixels);
             
             imageToSave =new BufferedImage(d1NewImage, d1NewImage, BufferedImage.TYPE_INT_RGB);
-            
+            imageToCatch=new BufferedImage(d1NewImage, d1NewImage, BufferedImage.TYPE_INT_RGB);;
             this.lbl_EnterPathAdver.setVisible(true);
             this.lbl_InfoPath.setVisible(false);
             this.txt_ShowPath.setVisible(false);
@@ -601,23 +603,22 @@ public class FirstWindows extends javax.swing.JFrame{
                         Dimensions dim = dimensionNewImage[i][j];
                         Dimensions dim2 = dimensionsFileImage[i][j];
                         if(dim.getDim1() <= y && dim.getDim2() <= x && dim.getDim3() >= y && dim.getDim4() >= x){
-                            Graphics g;
+                            Graphics g, g3;
                             g= getGraphics();
                             g2=getGraphicsImageSave();
-                            
+                            g3=imageToCatch.getGraphics();
                             
                             
                             if(modifyImage==0){
                                 g.drawImage(buferedSubImage, dim.getDim2(), dim.getDim1(),null);
                                 g2.drawImage(buferedSubImage, dim2.getDim2(), dim2.getDim1(),null);
-                                 
-                                
-                                imageBuffered[i][j]=buferedSubImage;
+                                g3.drawImage(buferedSubImage, dim2.getDim2(), dim2.getDim1(),null);
                                 
                             }else if(modifyImage==1){
                                 int deletePixel= pixels;
                                 g.clearRect(dim.getDim2()+1, dim.getDim1()+(1), deletePixel-(1), deletePixel-(1));
                                 g2.clearRect(dim2.getDim2()+1, dim2.getDim1()+(1), deletePixel-(1), deletePixel-(1));
+                                g3.clearRect(dim2.getDim2()+1, dim2.getDim1()+(1), deletePixel-(1), deletePixel-(1));
                                 jchb_delete.setSelected(false);
                                 modifyImage=0;
                             }else if(modifyImage==2){
@@ -626,16 +627,18 @@ public class FirstWindows extends javax.swing.JFrame{
                                 int with=bfFlip.getWidth();
                                 int height=bfFlip.getHeight();
                                 g.drawImage(bfFlip, dim.getDim2()+with+(1), dim.getDim1(), -with, height, null);
-                                g2.drawImage(bfFlip, dim2.getDim2()+with+(1), dim2.getDim1(), -with, height, null);    
+                                g2.drawImage(bfFlip, dim2.getDim2()+with+(1), dim2.getDim1(), -with, height, null); 
+                                g3.drawImage(bfFlip, dim2.getDim2()+with+(1), dim2.getDim1(), -with, height, null);
                                 jchb_flyHorizontal.setSelected(false);
                                 modifyImage=0;
                             }else if(modifyImage==3){
-                                BufferedImage aux = null;
-                                bfFlip = imageToSave.getSubimage(dim2.getDim2(), dim2.getDim1(),pixels , pixels);;
+                                bfFlip = imageToSave.getSubimage(dim2.getDim2(), dim2.getDim1(),pixels , pixels);
+                                BufferedImage aux = imageToCatch.getSubimage(dim2.getDim2(), dim2.getDim1(),pixels , pixels);
                                 int with=bfFlip.getWidth();
                                 int height=bfFlip.getHeight();
                                 g.drawImage(bfFlip, dim.getDim2(), dim.getDim1()+height+(1), with, -height, null);
-                                g2.drawImage(bfFlip, dim2.getDim2(), dim2.getDim1()+height+(1), with, -height, null);   
+                                g2.clearRect(dim2.getDim2()+1, dim2.getDim1()+(1), pixels-(1), pixels-(1));
+                                g2.drawImage(aux, dim2.getDim2(), dim2.getDim1()+height+(1), with, -height, null);
                                 jchb_flyVertical.setSelected(false);
                                 modifyImage=0;
                             }
