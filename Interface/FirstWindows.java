@@ -5,23 +5,87 @@
  */
 package Interface;
 
+
+import domain.Dimensions;
+import domain.Resources;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Label;
+import java.awt.Paint;
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author manfr
  */
-public class FirstWindows extends javax.swing.JFrame {
+public class FirstWindows extends javax.swing.JFrame{
 
     /**
      * Creates new form VentanaPrimera
      */
-    
     public static String path;
-    
+    private static int pixels;
+    private static int d1;
+    private static int d1NewImage;
+    public static int modifyImage=0;
+    private static int num;
+    private Icon icon = null;
+    private ImageIcon image;
+    private JFileChooser chooseFile  = new JFileChooser();
+    private JFileChooser choosePackageToSave  = new JFileChooser();
+    private File file = chooseFile.getSelectedFile();
+    private BufferedImage bufferedImage;
+    private Dimensions dimensionMatrix[][];
+    private Dimensions dimensionNewImage[][];
+    private Dimensions dimensionsFileImage[][];
+    private BufferedImage imageBuffered[][];
+    private Dimensions dimension;
+    private BufferedImage buferedSubImage;
+    private BufferedImage imageToSave;
+    private Label lbl_imageS = new Label();
+    private Graphics g2;
+    private String nombre2="";
     public FirstWindows() {
         initComponents();
+        
+        this.lbl_intDimensions.setVisible(false);
+        this.lbl_IntPixels.setVisible(false);
+        this.tfd_intPixels.setVisible(false);
+        this.btn_DoneSize.setVisible(false);
+        
+        
+        this.btn_Save.setVisible(false); 
+        this.lbl_EnterPathAdver.setVisible(false);
+        this.lbl_InfoPath.setVisible(false);
+        this.txt_ShowPath.setVisible(false);
+        this.btn_Search.setVisible(false);
+        
+        this.jScrollPaneProject.setVisible(false);
+        this.jchb_delete.setVisible(false);
+        this.jchb_flyHorizontal.setVisible(false);
+        this.jchb_flyVertical.setVisible(false);
+       // chargeLines();
     }
 
     /**
@@ -35,86 +99,651 @@ public class FirstWindows extends javax.swing.JFrame {
 
         lbl_InfoPath = new javax.swing.JLabel();
         txt_ShowPath = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        btn_go = new javax.swing.JButton();
+        btn_Search = new javax.swing.JButton();
+        lbl_IntPixels = new javax.swing.JLabel();
+        tfd_intPixels = new javax.swing.JTextField();
+        lbl_intDimensions = new javax.swing.JLabel();
+        btn_DoneSize = new javax.swing.JButton();
+        lbl_EnterPathAdver = new javax.swing.JLabel();
+        jScrollPaneProject = new javax.swing.JScrollPane();
+        lbl_LabelImage = new javax.swing.JLabel();
+        jchb_delete = new javax.swing.JCheckBox();
+        jchb_flyHorizontal = new javax.swing.JCheckBox();
+        jchb_flyVertical = new javax.swing.JCheckBox();
+        btn_Save = new javax.swing.JButton();
+        cb_stratWith = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setFocusTraversalPolicyProvider(true);
+        setFocusable(false);
+        setMaximumSize(new java.awt.Dimension(1200, 700));
+        setMinimumSize(new java.awt.Dimension(1200, 700));
+        setPreferredSize(new java.awt.Dimension(1200, 700));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                formComponentHidden(evt);
+            }
+        });
+        getContentPane().setLayout(null);
 
         lbl_InfoPath.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lbl_InfoPath.setText("Path:");
+        getContentPane().add(lbl_InfoPath);
+        lbl_InfoPath.setBounds(20, 170, 38, 27);
 
+        txt_ShowPath.setEditable(false);
         txt_ShowPath.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-
-        jButton1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jButton1.setText("Search");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        txt_ShowPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                txt_ShowPathActionPerformed(evt);
             }
         });
+        getContentPane().add(txt_ShowPath);
+        txt_ShowPath.setBounds(60, 170, 390, 27);
 
-        btn_go.setText("Go");
-        btn_go.addActionListener(new java.awt.event.ActionListener() {
+        btn_Search.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        btn_Search.setText("Search");
+        btn_Search.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_goActionPerformed(evt);
+                btn_SearchActionPerformed(evt);
             }
         });
+        getContentPane().add(btn_Search);
+        btn_Search.setBounds(20, 200, 100, 28);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl_InfoPath, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_ShowPath, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(133, 133, 133)
-                .addComponent(btn_go)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_InfoPath, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_ShowPath, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(95, 95, 95)
-                .addComponent(btn_go)
-                .addContainerGap(106, Short.MAX_VALUE))
-        );
+        lbl_IntPixels.setText("Please enter the number of pixels");
+        getContentPane().add(lbl_IntPixels);
+        lbl_IntPixels.setBounds(21, 11, 216, 29);
+
+        tfd_intPixels.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfd_intPixelsActionPerformed(evt);
+            }
+        });
+        tfd_intPixels.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfd_intPixelsKeyTyped(evt);
+            }
+        });
+        getContentPane().add(tfd_intPixels);
+        tfd_intPixels.setBounds(21, 46, 79, 28);
+
+        lbl_intDimensions.setText("Please enter the dimensions of the new image");
+        getContentPane().add(lbl_intDimensions);
+        lbl_intDimensions.setBounds(21, 80, 266, 30);
+
+        btn_DoneSize.setText("Done");
+        btn_DoneSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_DoneSizeActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_DoneSize);
+        btn_DoneSize.setBounds(20, 110, 110, 30);
+
+        lbl_EnterPathAdver.setText("Please, search the path of the image ");
+        getContentPane().add(lbl_EnterPathAdver);
+        lbl_EnterPathAdver.setBounds(20, 150, 390, 20);
+
+        jScrollPaneProject.setBorder(null);
+        jScrollPaneProject.setMaximumSize(new java.awt.Dimension(100, 100));
+        jScrollPaneProject.setMinimumSize(new java.awt.Dimension(100, 100));
+
+        lbl_LabelImage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbl_LabelImageMouseClicked(evt);
+            }
+        });
+        jScrollPaneProject.setViewportView(lbl_LabelImage);
+
+        getContentPane().add(jScrollPaneProject);
+        jScrollPaneProject.setBounds(30, 270, 520, 330);
+
+        jchb_delete.setText("Delete Square");
+        jchb_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jchb_deleteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jchb_delete);
+        jchb_delete.setBounds(590, 90, 110, 23);
+
+        jchb_flyHorizontal.setText("Flip horizontal");
+        jchb_flyHorizontal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jchb_flyHorizontalActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jchb_flyHorizontal);
+        jchb_flyHorizontal.setBounds(590, 130, 110, 23);
+
+        jchb_flyVertical.setText("Flip vertical");
+        jchb_flyVertical.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jchb_flyVerticalActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jchb_flyVertical);
+        jchb_flyVertical.setBounds(590, 170, 90, 23);
+
+        btn_Save.setText("Save");
+        btn_Save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SaveActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_Save);
+        btn_Save.setBounds(450, 30, 100, 30);
+
+        cb_stratWith.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cb_stratWith.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Continue last", "Start new" }));
+        cb_stratWith.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_stratWithActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cb_stratWith);
+        cb_stratWith.setBounds(220, 30, 110, 30);
+
+        getAccessibleContext().setAccessibleParent(this);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public String getPath(){
+    //method to get the pixels
+    public static int getPixels() {
+        return pixels;
+    }//end method
+    //method to get the dimension one
+    public static int getD1() {
+        return d1;
+    }//end method
+    //method to get the path
+    public static String getPath() {
         return path;
-    }
+    }//end method
+    //return the path of image
+    public String returnPath(){
+        return path;
+    }//end method
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser chooseFile  = new JFileChooser();
-        chooseFile.showOpenDialog(null);
-        File file = chooseFile.getSelectedFile();
-        txt_ShowPath.setText(String.valueOf(file));
-        path=txt_ShowPath.getText();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    //method to bring the last image that users worked, save the history steps
+    public void bringLastImage(){ 
+        try {
+            Resources rc = new Resources();
+            BufferedReader br = rc.readBufferedReader("./Historial.txt");
+            String actualReg = br.readLine();
+            String searchpath="";
+            String absolutePath="";
+            while(actualReg!=null){
+                searchpath=actualReg;
+                actualReg = br.readLine();
+            }
 
-    private void btn_goActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_goActionPerformed
-        // TODO add your handling code here:
-        MakingMosaic mosaic = new MakingMosaic();
-        mosaic.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_btn_goActionPerformed
+            StringTokenizer st = new StringTokenizer(searchpath, ";");
+            int i =1;
+            while(st.hasMoreTokens()){
+                if(i==1){
 
+                    d1=Integer.parseInt(st.nextToken());
+
+                }else if (i==2){
+                    pixels=Integer.parseInt(st.nextToken());
+
+                }else if (i==3){
+                    absolutePath = st.nextToken();
+
+                }else if (i==4){
+                    d1NewImage=Integer.parseInt(st.nextToken());
+
+                }
+                i++;
+            }
+            //System.out.println(searchpath);
+            BufferedImage im = ImageIO.read(new FileInputStream(absolutePath));
+            Graphics g = getGraphics();
+            g.drawImage(im, 720, 100, null);
+            bufferedImage = ImageIO.read(new FileInputStream(absolutePath));
+            imageToSave=ImageIO.read(new FileInputStream(absolutePath));
+            graphic(d1NewImage,pixels);
+            this.cb_stratWith.setEnabled(true);
+            this.lbl_EnterPathAdver.setVisible(true);
+            this.lbl_InfoPath.setVisible(true);
+            this.txt_ShowPath.setVisible(true);
+            this.btn_Search.setVisible(true);
+            
+
+//            SaveImages sv = new SaveImages();
+//            BufferedOfImages bf = new BufferedOfImages();
+//            bf=sv.getLoanList("./MatrixOfImages.dat");
+//            imageBuffered=bf.getImages();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FirstWindows.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FirstWindows.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }// en method
+            
+    //method to full the matrix of dimension
+    public void fullMatrix(int d1,int pixels){
+        
+        dimensionMatrix = new Dimensions[d1/pixels][d1/pixels];
+        int dim1=0,dim2=0,dim3=0,dim4=0;
+        for (int i = 0,x=0; i < dimensionMatrix.length; i++,x+=pixels) {
+            for (int j = 0,y=0; j < dimensionMatrix[0].length; j++,y+=pixels) {
+                dim1=x;
+                dim2=y;
+                dim3=x+pixels;
+                dim4=y+pixels;
+                dimension = new Dimensions(dim1, dim2, dim3, dim4);
+                dimensionMatrix[i][j]=dimension;
+            }
+        }
+        
+    }//end method
+    
+//    public void saveImageInMatriz(BufferedImage image, int row, int column){
+//        image[row][column]=image;
+//    }
+    
+    //method to full the matrix of new mosaic that user make
+    public void fullmatrixNewImage(int d1,int pixels){
+        
+        dimensionNewImage = new Dimensions[d1/pixels][d1/pixels];
+        int dim1=0,dim2=0,dim3=0,dim4=0;
+        for (int i = 0,x=100; i < dimensionNewImage.length; i++,x+=pixels) {
+            for (int j = 0,y=720; j < dimensionNewImage[0].length; j++,y+=pixels) {
+                dim1=x;
+                dim2=y;
+                dim3=x+pixels;
+                dim4=y+pixels;
+                Dimensions dimensionNew = new Dimensions(dim1, dim2, dim3, dim4);
+                dimensionNewImage[i][j]=dimensionNew;
+            }
+        }
+        
+    }//end method
+    
+    //method to fill the matrix with the dimension of the image that yhe user select
+    public void fillMatrixFile(int d1,int pixels){
+        
+        dimensionsFileImage = new Dimensions[d1/pixels][d1/pixels];
+        int dim1=0,dim2=0,dim3=0,dim4=0;
+        for (int i = 0,x=0; i < dimensionsFileImage.length; i++,x+=pixels) {
+            for (int j = 0,y=0; j < dimensionsFileImage[0].length; j++,y+=pixels) {
+                dim1=x;
+                dim2=y;
+                dim3=x+pixels;
+                dim4=y+pixels;
+                Dimensions dimensionNew = new Dimensions(dim1, dim2, dim3, dim4);
+                dimensionsFileImage[i][j]=dimensionNew;
+            }
+        }
+        
+    }//end method
+    
+    //method to draw the lines horizontal and vertical on the image
+    public void chargeLines(){
+        if(d1>0&&pixels>0){
+            d1=getDimensionOfImage(pixels);
+            getLinesPanels(d1, pixels);
+        }
+    
+    }//end method
+    //method to make the lines of images
+    public void graphic(int d1, int pixel){
+        Graphics g = getGraphics();
+        g.drawRect(720, 100, d1, d1);
+  
+        
+        for (int y = 100; y <100+d1 ; y+=pixel) {//for (int y = 0; y <d1+100 ; y+=pixel) {
+            g.drawLine(720, y, 720+d1, y);
+            
+        }
+        for (int y = 720; y <720+d1 ; y+=pixel)
+            g.drawLine(y,100+d1,y, 100);
+        
+        fullmatrixNewImage(d1, pixel);
+        fillMatrixFile(d1, pixel);
+    }//end method
+    //method to get the dimension of images
+    public int getDimensionOfImage(int pixels){
+        
+        int dimention =0;
+        if(bufferedImage.getWidth()<bufferedImage.getHeight()){
+            dimention=bufferedImage.getWidth();
+        }else if(bufferedImage.getWidth()>bufferedImage.getHeight()){
+            dimention=bufferedImage.getHeight();
+        }else if (bufferedImage.getWidth()==bufferedImage.getHeight()){
+            dimention=bufferedImage.getHeight();
+        }
+       
+        num=0;
+        for (int i = 0; i <=dimention; i++) {
+            if(pixels*i<=dimention){
+                num=i;
+            }else{
+                i=dimention;
+            }
+        }
+        d1=pixels*num;
+        imageBuffered = new BufferedImage[num/2][num/2];
+        return d1;
+    }//end method
+    //method to get the lines of panel
+    public void getLinesPanels(int d1,int pixel){
+
+        Graphics g = bufferedImage.getGraphics();
+        g.setColor(Color.BLACK);
+        int a = bufferedImage.getWidth();
+        int b = bufferedImage.getHeight();
+
+        g.drawImage(bufferedImage, 0, 0,d1,d1,0,0,bufferedImage.getWidth(),bufferedImage.getHeight(),null);
+ 
+        for (int y = 0; y < d1+pixel ; y+=pixel) {//for (int y = 0; y <d1+100 ; y+=pixel) {
+            g.drawLine(0, y, d1, y);
+            
+        }
+        for (int y = 0; y < d1+pixel ; y+=pixel)
+            g.drawLine(y,d1,y, 0);
+        
+        
+        g.clearRect(d1+1, 0, a-d1, b);
+        g.clearRect(0, d1+1, b, a-d1);
+        fullMatrix(d1, pixel);
+
+    }//end method
+    //get the image of the label
+    public Graphics getGraphicsImage() throws FileNotFoundException{
+        
+        return this.lbl_LabelImage.getGraphics();
+    }//end method
+    //method to get the image of the bufferedImage to save
+    public Graphics getGraphicsImageSave(){
+        return this.imageToSave.getGraphics();
+    }//end method
+    
+    private void btn_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SearchActionPerformed
+        // TODO add your handling code here:
+        //search image in your computer
+        try{
+            chooseFile.showOpenDialog(null);
+            FileNameExtensionFilter searchFormat = new FileNameExtensionFilter("JPG, PNG", "jpg","png");
+            chooseFile.setFileFilter(searchFormat);
+            file = chooseFile.getSelectedFile();
+            txt_ShowPath.setText(String.valueOf(file));
+            path=txt_ShowPath.getText();
+            
+            this.jScrollPaneProject.setVisible(true);
+            bufferedImage = ImageIO.read(new FileInputStream(path));
+            image = new ImageIcon(bufferedImage);
+            chargeLines();
+            icon=image;
+            lbl_LabelImage.setIcon(icon);
+            jScrollPaneProject.setViewportView(lbl_LabelImage);
+            
+            
+            
+            
+            tfd_intPixels.setEditable(false);
+            btn_DoneSize.setEnabled(false);
+            btn_Search.setEnabled(true);
+            this.jchb_delete.setVisible(true);
+            this.btn_Save.setVisible(true);
+        this.jchb_flyHorizontal.setVisible(true);
+        this.jchb_flyVertical.setVisible(true);
+        }catch(IOException fnr){
+            System.out.println("Problem in the image");
+        }
+        
+        
+    }//GEN-LAST:event_btn_SearchActionPerformed
+
+    private void txt_ShowPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_ShowPathActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_ShowPathActionPerformed
+
+    private void formComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentHidden
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formComponentHidden
+
+    private void tfd_intPixelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfd_intPixelsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfd_intPixelsActionPerformed
+
+    private void btn_DoneSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DoneSizeActionPerformed
+        // TODO add your handling code here:
+        //establish the pixels
+        Graphics g = getGraphics();
+       
+        try{
+            pixels = Integer.parseInt(tfd_intPixels.getText());
+            while(pixels>450){
+                tfd_intPixels.setText("");
+                lbl_EnterPathAdver.setVisible(true);
+                pixels= Integer.parseInt(tfd_intPixels.getText());
+            }
+            lbl_EnterPathAdver.setVisible(false);
+             int num1=0;
+                for (int i = 0; i <=450; i++) {
+                    if(pixels*i<=450){
+                        num1=i;
+                    }else{
+                        i=450;
+                    }
+                }
+                
+            d1=pixels*num1;  
+            d1NewImage = d1;
+            lbl_imageS.setSize(d1NewImage, d1NewImage);
+            g.clearRect(720, 100, 720, 720);
+            graphic(d1,pixels);
+            
+            imageToSave =new BufferedImage(d1NewImage, d1NewImage, BufferedImage.TYPE_INT_RGB);
+            
+            this.lbl_EnterPathAdver.setVisible(true);
+            this.lbl_InfoPath.setVisible(false);
+            this.txt_ShowPath.setVisible(false);
+            this.btn_Search.setVisible(true);
+            this.btn_Search.setEnabled(true);
+            txt_ShowPath.setText("");
+            
+        }catch(NumberFormatException nfe){
+            lbl_EnterPathAdver.setText("Please enter an integer number and less than 450");
+            lbl_EnterPathAdver.setVisible(true);
+        }
+            
+    }//GEN-LAST:event_btn_DoneSizeActionPerformed
+
+    
+    private void tfd_intPixelsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfd_intPixelsKeyTyped
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_tfd_intPixelsKeyTyped
+
+    private void lbl_LabelImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_LabelImageMouseClicked
+        // TODO add your handling code here:
+        //get the subimages that user select
+        int x=evt.getX();
+        int y=evt.getY();
+        
+        if (x<=d1&&y<=d1){
+            Dimensions dim;
+            for (int i = 0; i < dimensionMatrix.length; i++) {
+                for (int j = 0; j < dimensionMatrix[0].length; j++) {
+                    dim = dimensionMatrix[i][j];
+                    if(dim.getDim1()<=y&&dim.getDim2()<=x&&dim.getDim3()>=y&&dim.getDim4()>=x){  
+                        buferedSubImage = bufferedImage.getSubimage(dim.getDim2(), dim.getDim1(),pixels , pixels);
+                    }
+                }
+  
+            }
+        }
+    }//GEN-LAST:event_lbl_LabelImageMouseClicked
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+        //listen the mouse click and save the image select for the user and placed in the new mosaic, flip, delete
+        BufferedImage bfFlip;
+        int x=evt.getX();
+        int y=evt.getY();
+        if (x >= 720 && x <= 1170 && y >= 100 && y <= 550){
+            if(buferedSubImage != null){
+                for (int i = 0; i < dimensionNewImage.length; i++) 
+                    for (int j = 0; j < dimensionNewImage[0].length; j++) {
+                        Dimensions dim = dimensionNewImage[i][j];
+                        Dimensions dim2 = dimensionsFileImage[i][j];
+                        if(dim.getDim1() <= y && dim.getDim2() <= x && dim.getDim3() >= y && dim.getDim4() >= x){
+                            Graphics g;
+                            g= getGraphics();
+                            g2=getGraphicsImageSave();
+                            
+                            
+                            
+                            if(modifyImage==0){
+                                g.drawImage(buferedSubImage, dim.getDim2(), dim.getDim1(),null);
+                                g2.drawImage(buferedSubImage, dim2.getDim2(), dim2.getDim1(),null);
+                                 
+                                
+                                imageBuffered[i][j]=buferedSubImage;
+                                
+                            }else if(modifyImage==1){
+                                int deletePixel= pixels;
+                                g.clearRect(dim.getDim2()+1, dim.getDim1()+(1), deletePixel-(1), deletePixel-(1));
+                                g2.clearRect(dim2.getDim2()+1, dim2.getDim1()+(1), deletePixel-(1), deletePixel-(1));
+                                jchb_delete.setSelected(false);
+                                modifyImage=0;
+                            }else if(modifyImage==2){
+                                BufferedImage aux = null;
+                                bfFlip = imageToSave.getSubimage(dim2.getDim2(), dim2.getDim1(),pixels , pixels);
+                                int with=bfFlip.getWidth();
+                                int height=bfFlip.getHeight();
+                                g.drawImage(bfFlip, dim.getDim2()+with+(1), dim.getDim1(), -with, height, null);
+                                g2.drawImage(bfFlip, dim2.getDim2()+with+(1), dim2.getDim1(), -with, height, null);    
+                                jchb_flyHorizontal.setSelected(false);
+                                modifyImage=0;
+                            }else if(modifyImage==3){
+                                BufferedImage aux = null;
+                                bfFlip = imageToSave.getSubimage(dim2.getDim2(), dim2.getDim1(),pixels , pixels);;
+                                int with=bfFlip.getWidth();
+                                int height=bfFlip.getHeight();
+                                g.drawImage(bfFlip, dim.getDim2(), dim.getDim1()+height+(1), with, -height, null);
+                                g2.drawImage(bfFlip, dim2.getDim2(), dim2.getDim1()+height+(1), with, -height, null);   
+                                jchb_flyVertical.setSelected(false);
+                                modifyImage=0;
+                            }
+                        }
+                    }
+            }
+        }
+    }//GEN-LAST:event_formMouseClicked
+
+    private void jchb_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchb_deleteActionPerformed
+        // TODO add your handling code here:
+        modifyImage=1;
+        jchb_flyHorizontal.setSelected(false);
+        jchb_flyVertical.setSelected(false);
+    }//GEN-LAST:event_jchb_deleteActionPerformed
+
+    private void jchb_flyHorizontalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchb_flyHorizontalActionPerformed
+        // TODO add your handling code here:
+        modifyImage=2;
+        jchb_delete.setSelected(false);
+        jchb_flyVertical.setSelected(false);
+    }//GEN-LAST:event_jchb_flyHorizontalActionPerformed
+
+    private void jchb_flyVerticalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchb_flyVerticalActionPerformed
+        // TODO add your handling code here:
+        modifyImage=3;
+        jchb_delete.setSelected(false);
+        jchb_flyHorizontal.setSelected(false);
+    }//GEN-LAST:event_jchb_flyVerticalActionPerformed
+
+    private void btn_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaveActionPerformed
+        try {
+             //TODO add your handling code here:
+            //save images
+            choosePackageToSave.showSaveDialog(null);
+            String path2= choosePackageToSave.getSelectedFile().getAbsolutePath();
+            String path3="";
+            for (int i = path2.length()-1,y=0; i >=0; i--) {
+                char sign = path2.charAt(i);
+                
+                if(sign==92&&y==0){//
+                    y++;
+                    
+                }else if(y!=0){
+                    path3+=sign;
+                }
+            }
+            
+            String path4="";
+            for (int i = path3.length()-1; i >=0; i--) {
+                String sign = ""+path3.charAt(i);
+                path4+=sign;
+            }
+            char x = 92;
+            path4+=x;
+            System.out.println(path4);
+            String nombre = JOptionPane.showInputDialog(null, "Ingrese el nombre de la imagen");
+            String pathComplete = path4+nombre+".png";
+            File outputFile = new File(path4+nombre+".png");
+            ImageIO.write(imageToSave, "png", outputFile);
+            nombre2=nombre;
+            Resources rc = new Resources();
+            PrintStream ps = rc.getPrintStream("./Historial.txt", false);
+            ps.println(d1+";"+pixels+";"+pathComplete+";"+d1NewImage);
+        } catch (IOException ex) {
+            Logger.getLogger(FirstWindows.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btn_SaveActionPerformed
+
+    private void cb_stratWithActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_stratWithActionPerformed
+        // TODO add your handling code here:
+        //choose of user about start a new mosaic or use a old mosaic
+        String answer = cb_stratWith.getSelectedItem().toString();
+         
+        if(answer.equals("Continue last")){//Si
+             bringLastImage();
+         }else if (answer.equals("Start new")){//no
+             Graphics g = getGraphics();
+             g.clearRect(720, 100, 720, 720);
+             bufferedImage =null;
+             imageBuffered = new BufferedImage[0][0];   
+            this.lbl_intDimensions.setVisible(true);
+            this.lbl_IntPixels.setVisible(true);
+            this.tfd_intPixels.setVisible(true);
+            this.btn_DoneSize.setVisible(true);
+            this.jScrollPaneProject.setVisible(false);
+            this.lbl_EnterPathAdver.setVisible(false);
+            this.lbl_InfoPath.setVisible(false);
+            this.txt_ShowPath.setVisible(false);
+            this.btn_Search.setVisible(false);
+            this.jchb_delete.setVisible(false);
+            this.jchb_flyHorizontal.setVisible(false);
+            this.btn_DoneSize.setEnabled(true);
+            this.tfd_intPixels.setEditable(true);
+            this.tfd_intPixels.setText("");
+            this.tfd_intPixels.requestFocus();
+        
+        
+        }else{
+            
+        }
+    }//GEN-LAST:event_cb_stratWithActionPerformed
+//int answer = JOptionPane.showConfirmDialog(null, "¿Desea continuar su proyecto anterior?");
+
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -152,9 +781,20 @@ public class FirstWindows extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_go;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_DoneSize;
+    private javax.swing.JButton btn_Save;
+    private javax.swing.JButton btn_Search;
+    private javax.swing.JComboBox<String> cb_stratWith;
+    private javax.swing.JScrollPane jScrollPaneProject;
+    private javax.swing.JCheckBox jchb_delete;
+    private javax.swing.JCheckBox jchb_flyHorizontal;
+    private javax.swing.JCheckBox jchb_flyVertical;
+    private javax.swing.JLabel lbl_EnterPathAdver;
     private javax.swing.JLabel lbl_InfoPath;
+    private javax.swing.JLabel lbl_IntPixels;
+    private javax.swing.JLabel lbl_LabelImage;
+    private javax.swing.JLabel lbl_intDimensions;
+    private javax.swing.JTextField tfd_intPixels;
     private javax.swing.JTextField txt_ShowPath;
     // End of variables declaration//GEN-END:variables
 }
